@@ -1,0 +1,23 @@
+{
+    "name": "blainesch/laravel-pretty-controller",
+    "description": "",
+    "authors": [
+        {
+            "name": "Blaine Schmeisser",
+            "email": "blainesch@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.1.*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations"
+        ],
+        "psr-0": {
+            "Blainesch\\LaravelPrettyController\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
