@@ -37,8 +37,9 @@ class MediaType {
 
 	public static function add($type, $options = [])
 	{
-		$type = static::$types[$type] = new MediaType($options);
-		return $type;
+		return static::$types[$type] = new MediaType($options + array(
+			'name' => $type,
+		));
 	}
 
 	public static function all()
