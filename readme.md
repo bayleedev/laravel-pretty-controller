@@ -1,4 +1,5 @@
 ## What?
+[![Build Status](https://travis-ci.org/blainesch/laravel-pretty-controller.svg?branch=master)](https://travis-ci.org/blainesch/laravel-pretty-controller)
 
 This library provides helpful content negotiations. For instance if you ask for json back from a typical laravel website you'd still get html back. I carefully look at the `Accept` header and `type` (`.json` for instance) to best determine what media type to render.
 
