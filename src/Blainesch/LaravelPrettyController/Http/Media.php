@@ -3,55 +3,57 @@
 namespace Blainesch\LaravelPrettyController\Http;
 
 use Blainesch\LaravelPrettyController\Action\BadAcceptType;
+use Negotiation\FormatNegotiator;
 use App;
-
-Media::type('json', array(
-	'conditions' => array(
-		'type' => 'json',
-		'accept' => array(
-			'application/json',
-			'application/x-json',
-		),
-	),
-	'encode' => function($request, $response) {
-		return json_encode($response);
-	},
-));
-Media::type('html', array(
-	'conditions' => array(
-		'accept' => array(
-			'text/html',
-			'*/*',
-		),
-	),
-	'encode' => function($request, $response) {
-		$class = strtolower(str_replace('Controller', '', $request['controller']));
-		return View::make("{$class}.{$request['method']}")->with($response);
-	},
-));
 
 class Media {
 
-	public static $types = array();
+	public $request = null;
 
-	public static function type($type, $options = array())
+	public $response = null;
+
+	public function __construct($request, $response)
 	{
-		return static::$types[$type] = new MediaType($options);
+		$this->request = $request;
+		$this->response = $response;
 	}
 
-	public static function types()
+	public function findByType()
 	{
-		return static::$types;
+		foreach (MediaTypes::all() as $name => $mediaType) {
+			if ($mediaType->type() === $this->request['type']) {
+				return $mediaType;
+			}
+		}
+		return false;
+	}
+
+	public function findBestAccept()
+	{
+		$allAcceptTypes = MediaTypes::allAcceptTypes();
+		$negotiator = new FormatNegotiator();
+		return $negotiator->getBest($this->request['accept'], $allAcceptTypes);
+	}
+
+	public function findByAccept()
+	{
+		$best = $this->findBestAccept();
+		foreach (MediaTypes::all() as $name => $mediaType) {
+			if (in_array($best->getValue(), $mediaType->accept())) {
+				return $mediaType;
+			}
+		}
+		return false;
 	}
 
 	public static function render($request, $response)
 	{
-		foreach (static::types() as $name => $mediaType) {
-			if ($mediaType->respondsTo($request)) {
-				return $mediaType->encode($request, $response);
-			}
+		$media = new Media($request, $response);
+		$mediaType = $media->findByType() ?: $media->findByAccept();
+		if (!$mediaType) {
+			return App::abort(406, 'Unrecognized accept type.');
 		}
-		App::abort(406, 'Unrecognized accept type.');
+		return $mediaType->encode($request, $response);
 	}
 
 }

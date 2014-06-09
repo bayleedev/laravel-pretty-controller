@@ -20,7 +20,7 @@ class PrettyController extends CoreController {
 	protected function request()
 	{
 		return array(
-			'type' => end($this->params),
+			'type' => (string) end($this->params),
 			'accept' => Request::header('Accept'),
 			'controller' => get_called_class(),
 			'method' => $this->method,
