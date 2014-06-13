@@ -27,6 +27,13 @@ class UserController extends BaseController {
 
 ## Installation
 
+### Composer
+~~~ json
+'require': {
+	"blainesch/laravel-pretty-controller": "0.0.1"
+}
+~~~
+
 ### Update `Controller` and add `CoreController` values in your `app/config/app.php` file.
 ~~~ php
 'aliases' => [
