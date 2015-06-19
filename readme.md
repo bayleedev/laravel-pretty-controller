@@ -8,7 +8,7 @@ What does this mean? It means your controller actions are cleaner, all you do is
 class UserController extends BaseController {
 	public function show()
 	{
-		return View::make('user.index')->with([
+		return View::make('user.show')->with([
 			'name' => 'BlaineSch',
 		]);
 	}
